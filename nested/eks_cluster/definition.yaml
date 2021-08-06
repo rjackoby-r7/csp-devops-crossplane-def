@@ -32,6 +32,11 @@ spec:
                   description: ID of this Cluster that other objects will use to refer to it.
 
                 ###
+                providerConfigName:
+                  type: string
+                  description: The providerConfig name that you want resources to be created with.
+
+                ###
                 networkRef:
                   type: object
                   description: "A reference to the Network object that this cluster should be connected to."
@@ -41,6 +46,7 @@ spec:
                       description: ID of the Network object this ref points to.
                   required:
                     - id
+                    - providerConfigName
 
                 ###
                 parameters:

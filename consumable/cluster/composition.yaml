@@ -20,6 +20,9 @@ spec:
         - fromFieldPath: spec.id
           toFieldPath: spec.id
 
+        - fromFieldPath: spec.providerConfigName
+          toFieldPath: spec.providerConfigName
+
         - fromFieldPath: spec.id
           toFieldPath: spec.clusterRef.id # Notice here  (== parnet spec.id)
 
@@ -40,6 +43,9 @@ spec:
 
         - fromFieldPath: spec.id
           toFieldPath: spec.id
+
+        - fromFieldPath: spec.providerConfigName
+          toFieldPath: spec.providerConfigName
 
         - fromFieldPath: spec.id
           toFieldPath: spec.networkRef.id # Notice here (== parnet spec.id)
@@ -69,6 +75,9 @@ spec:
             - type: string
               string:
                 fmt: "%s-ng1"
+
+        - fromFieldPath: spec.providerConfigName
+          toFieldPath: spec.providerConfigName
 
         - fromFieldPath: spec.id
           toFieldPath: spec.networkRef.id # Notice here (== parnet spec.id)
@@ -110,6 +119,9 @@ spec:
             - type: string
               string:
                 fmt: "%s-ng2"
+
+        - fromFieldPath: spec.providerConfigName
+          toFieldPath: spec.providerConfigName
 
         - fromFieldPath: spec.id
           toFieldPath: spec.networkRef.id # Notice here (== parnet spec.id)

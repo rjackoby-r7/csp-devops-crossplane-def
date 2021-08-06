@@ -28,6 +28,10 @@ spec:
                   type: string
                   description: ID of this Cluster that other objects will use to refer to it.
 
+                providerConfigName:
+                  type: string
+                  description: The providerConfig name that you want resources to be created with.
+
                 namespace:
                   type: string
                   description: Namespace of this Cluster were secrets will be saved to.
@@ -367,5 +371,6 @@ spec:
 
               required:
                 - id
+                - providerConfigName
                 - namespace
                 - parameters

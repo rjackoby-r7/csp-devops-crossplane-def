@@ -13,12 +13,8 @@ spec:
   patchSets:
     - name: providerConfig
       patches:
-        - fromFieldPath: spec.id
+        - fromFieldPath: spec.providerConfigName
           toFieldPath: spec.providerConfigRef.name
-          transforms:
-            - type: string
-              string:
-                fmt: "%s-aws-provider-config"
 
   resources:
 
