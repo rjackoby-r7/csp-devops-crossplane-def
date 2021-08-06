@@ -1,0 +1,249 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: CompositeResourceDefinition
+metadata:
+  name: services.aws.platformref.crossplane.io
+spec:
+  group: aws.platformref.crossplane.io
+  names:
+    kind: Services
+    plural: services
+  versions:
+    - name: v1alpha1
+      served: true
+      referenceable: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+
+                ###
+                destination_namespace:
+                  type: string
+                  description: Namespace were all cluster services will be located.
+                  default: "ops"
+
+                ###
+                aws_node_termination_handler:
+                  type: object
+                  description: Configuration for the AWS node termination handler.
+                  properties:
+                    source_repo:
+                      type: string
+                      description: AWS node termination handler source repo.
+
+                    chart_name:
+                      type: string
+                      description: AWS node termination handler chart name.
+
+                    version:
+                      type: string
+                      description: AWS node termination handler version.
+                      default: "0.15.2"
+
+                    #values:
+                    #  type: object
+                    #  description: AWS node termination handler values.
+                    #  default: {}
+
+
+                ###
+                cluster_autoscaler:
+                  type: object
+                  description: Configuration for the cluster autoscaler.
+                  properties:
+                    source_repo:
+                      type: string
+                      description: Cluster autoscaler source repo.
+
+                    chart_name:
+                      type: string
+                      description: Cluster autoscaler chart name.
+
+                    version:
+                      type: string
+                      description: Cluster autoscaler version.
+                      default: "9.10.3"
+
+                    #values:
+                    #  type: object
+                    #  description: Cluster autoscaler values.
+                    #  default: {}
+
+                ###
+                external_dns:
+                  type: object
+                  description: Configuration for the External DNS.
+                  properties:
+                    source_repo:
+                      type: string
+                      description: External DNS source repo.
+
+                    chart_name:
+                      type: string
+                      description: External DNS chart name.
+
+                    version:
+                      type: string
+                      description: External DNS version.
+                      default: "4.11.0"
+
+                    #values:
+                    #  type: object
+                    #  description: External DNS values.
+                    #  default: {}
+
+                ###
+                cert_manager:
+                  type: object
+                  description: Configuration for the cert manager.
+                  properties:
+                    source_repo:
+                      type: string
+                      description: Cert manager source repo.
+
+                    chart_name:
+                      type: string
+                      description: Cert manager chart name.
+
+                    version:
+                      type: string
+                      description: Cert manager version.
+                      default: "0.12.0"
+
+                    #values:
+                    #  type: object
+                    #  description: Cert manager values.
+                    #  default: {}
+
+                ###
+                ingress_nginx:
+                  type: object
+                  description: Configuration for the ingress nginx.
+                  properties:
+                    source_repo:
+                      type: string
+                      description: Ingress nginx source repo.
+
+                    chart_name:
+                      type: string
+                      description: Ingress nginx chart name.
+
+                    version:
+                      type: string
+                      description: Ingress nginx version.
+                      default: "3.29.0"
+
+                    #values:
+                    #  type: object
+                    #  description: Ingress nginx values.
+                    #  default: {}
+
+                ###
+                vouch:
+                  type: object
+                  description: Configuration for the vouch proxy.
+                  properties:
+                    source_repo:
+                      type: string
+                      description: Vouch proxy source repo.
+
+                    chart_name:
+                      type: string
+                      description: Vouch proxy chart name.
+
+                    version:
+                      type: string
+                      description: Vouch proxy version.
+                      default: "3.29.0"
+
+                    #values:
+                    #  type: object
+                    #  description: Vouch proxy values.
+                    #  default: {}
+
+                ###
+                kubernetes_external_secrets:
+                  type: object
+                  description: Configuration for the kubernetes external secrets.
+                  properties:
+                    source_repo:
+                      type: string
+                      description: Kubernetes external secrets source repo.
+
+                    chart_name:
+                      type: string
+                      description: Kubernetes external secrets chart name.
+
+                    version:
+                      type: string
+                      description: Kubernetes external secrets version.
+                      default: "8.2.3"
+
+                    #values:
+                    #  type: object
+                    #  description: Kubernetes external secrets values.
+                    #  default: {}
+
+                ###
+                prometheus:
+                  type: object
+                  description: Configuration for the Prometheus operator.
+                  properties:
+                    source_repo:
+                      type: string
+                      description: Prometheus operator source repo.
+
+                    chart_name:
+                      type: string
+                      description: Prometheus operator chart name.
+
+                    version:
+                      type: string
+                      description: Prometheus operator version to run.
+                      default: "10.1.0"
+
+                    #values:
+                    #  type: object
+                    #  description: Prometheus operator values.
+                    #  default: {}
+
+                ###
+                velero:
+                  type: object
+                  description: Configuration for velero.
+                  properties:
+                    source_repo:
+                      type: string
+                      description: Velero source repo.
+
+                    chart_name:
+                      type: string
+                      description: Velero chart name.
+
+                    version:
+                      type: string
+                      description: Velero version to run.
+                      default: "2.17.2"
+
+                    #values:
+                    #  type: object
+                    #  description: Velero values.
+                    #  default: {}
+
+                providerConfigRef:
+                  type: object
+                  description: "A reference to the ProviderConfig of the cluster that services should be deployed to."
+                  properties:
+                    name:
+                      type: string
+                      description: "Name of the Kubernetes provider configuration.
+                      This will typically be the name of the cluster with a
+                      five character suffix appended."
+                  required:
+                    - name
+
+              required:
+                - providerConfigRef

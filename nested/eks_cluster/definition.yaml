@@ -1,0 +1,69 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: CompositeResourceDefinition
+metadata:
+  name: compositeeks.aws.platformref.crossplane.io
+spec:
+  connectionSecretKeys:
+    - kubeconfig
+  group: aws.platformref.crossplane.io
+  names:
+    kind: CompositeEKS
+    plural: compositeeks
+  versions:
+    - name: v1alpha1
+      served: true
+      referenceable: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+
+                ###
+                namespace:
+                  type: string
+                  description: Namespace to save secrets to.
+
+                ###
+                id:
+                  type: string
+                  description: ID of this Cluster that other objects will use to refer to it.
+
+                ###
+                networkRef:
+                  type: object
+                  description: "A reference to the Network object that this cluster should be connected to."
+                  properties:
+                    id:
+                      type: string
+                      description: ID of the Network object this ref points to.
+                  required:
+                    - id
+
+                ###
+                parameters:
+                  type: object
+                  description: EKS configuration parameters.
+                  properties:
+
+                    region:
+                      type: string
+                      description: EKS region
+                      enum: ["us-east-1","us-east-2","eu-west-1"]
+
+                    version:
+                      type: string
+                      description: The K8S version
+                      enum: ["1.16","1.17","1.18","1.19","1.20","1.21"]
+                      default: "1.20"
+
+                  required:
+                    - region
+
+              required:
+                - namespace
+                - id
+                - networkRef
+                - parameters

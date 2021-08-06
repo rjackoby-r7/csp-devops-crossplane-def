@@ -1,0 +1,371 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: CompositeResourceDefinition
+metadata:
+  name: cwpcompositeclusters.aws.platformref.crossplane.io
+spec:
+  claimNames:
+    kind: CwpCluster
+    plural: cwpclusters
+  connectionSecretKeys:
+    - kubeconfig
+  group: aws.platformref.crossplane.io
+  names:
+    kind: CwpCompositeCluster
+    plural: cwpcompositeclusters
+  versions:
+    - name: v1alpha1
+      served: true
+      referenceable: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+
+                id:
+                  type: string
+                  description: ID of this Cluster that other objects will use to refer to it.
+
+                namespace:
+                  type: string
+                  description: Namespace of this Cluster were secrets will be saved to.
+
+                parameters:
+                  type: object
+                  description: Cluster configuration parameters.
+                  properties:
+
+                    region:
+                      type: string
+                      description: The cluster region.
+                      enum: ["us-east-1","us-east-2","eu-west-1"]
+
+                    #Will take id, namespace, region from parent object alongside other fields will be internally patched
+                    # network:
+
+                    eks:
+                      type: object
+                      description: EKS node configuration parameters.
+                      properties:
+                        # Belongs to the eks.cluster object
+                        version:
+                          type: string
+                          description: The K8S version
+                          enum: ["1.16","1.17","1.18","1.19","1.20","1.21"]
+                          default: "1.21"
+
+                        ng1:
+                          type: object
+                          description: EKS node group 1 parameters.
+                          properties:
+                            # Belongs to the eks.nodes object
+                            labels:
+                              type: object
+                              description: EKS node group 1 labels.
+
+                            scalingConfig:
+                              type: object
+                              description: EKS node scaling configuration parameters.
+                              properties:
+                                minSize:
+                                  type: integer
+                                  description: Min value of scaling config
+                                  default: 1
+                                maxSize:
+                                  type: integer
+                                  description: Max value of scaling config
+                                  default: 100
+                                desiredSize:
+                                  type: integer
+                                  description: desired size scaling config
+                                  default: 3
+
+                            instanceType:
+                              type: string #TODO: Change to string[] like in the provider
+                              description: The specific instance type for ALL node (will be changed)
+                              default: t3.medium
+                              enum: ["t3.nano","t3.micro","t3.small","t3.medium","t3.large","t3.xlarge","t3.2xlarge",
+                                     "t3a.nano","t3a.micro","t3a.small","t3a.medium","t3a.large","t3a.xlarge","t3a.2xlarge",
+                                     "t4g.nano","t4g.micro","t4g.small","t4g.medium","t4g.large","t4g.xlarge","t4g.2xlarge",
+                                     "m5.large","m5.xlarge","m5.2xlarge","m5.4xlarge","m5.8xlarge",
+                                     "m6g.medium","m6g.large","m6g.xlarge","m6g.2xlarge","m6g.4xlarge","m6g.8xlarge"
+                              ]
+                            diskSize:
+                              type: integer
+                              description: The disk size
+                              default: 20
+                              minimum: 5
+                              maximum: 200
+                          required:
+                            - labels
+                            - scalingConfig
+
+                        ng2:
+                          type: object
+                          description: EKS node group 2 parameters.
+                          properties:
+                            # Belongs to the eks.nodes object
+                            labels:
+                              type: object
+                              description: EKS node group 2 labels.
+
+                            scalingConfig:
+                              type: object
+                              description: EKS node scaling configuration parameters.
+                              properties:
+                                minSize:
+                                  type: integer
+                                  description: Min value of scaling config
+                                  default: 1
+                                maxSize:
+                                  type: integer
+                                  description: Max value of scaling config
+                                  default: 100
+                                desiredSize:
+                                  type: integer
+                                  description: desired size scaling config
+                                  default: 3
+
+                            instanceType:
+                              type: string #TODO: Change to string[] like in the provider
+                              description: The specific instance type for ALL node (will be changed)
+                              default: t3.medium
+                              enum: ["t3.nano","t3.micro","t3.small","t3.medium","t3.large","t3.xlarge","t3.2xlarge",
+                                     "t3a.nano","t3a.micro","t3a.small","t3a.medium","t3a.large","t3a.xlarge","t3a.2xlarge",
+                                     "t4g.nano","t4g.micro","t4g.small","t4g.medium","t4g.large","t4g.xlarge","t4g.2xlarge",
+                                     "m5.large","m5.xlarge","m5.2xlarge","m5.4xlarge","m5.8xlarge",
+                                     "m6g.medium","m6g.large","m6g.xlarge","m6g.2xlarge","m6g.4xlarge","m6g.8xlarge"
+                              ]
+                            diskSize:
+                              type: integer
+                              description: The disk size
+                              default: 20
+                              minimum: 5
+                              maximum: 200
+                          required:
+                            - labels
+                            - scalingConfig
+
+                      required:
+                        - ng1
+                        - ng2
+
+                    services:
+                      type: object
+                      description: Services configuration parameters.
+                      properties:
+
+                        ##
+                        destination_namespace:
+                          type: string
+                          description: Namespace were all cluster services will be located.
+                          default: "ops"
+
+                        #
+                        aws_node_termination_handler:
+                          type: object
+                          description: Configuration for the aws node termination handler.
+                          properties:
+                            source_repo:
+                              type: string
+                              description: AWS node termination handler source repo.
+
+                            chart_name:
+                              type: string
+                              description: AWS node termination handler chart name.
+
+                            version:
+                              type: string
+                              description: AWS node termination handler version to run.
+
+                            #values:
+                            #  type: object
+                            #  description: AWS node termination handler values.
+                            #  default: {}
+
+                        #
+                        cluster_autoscaler:
+                          type: object
+                          description: Configuration for the Cluster autoscaler.
+                          properties:
+                            source_repo:
+                              type: string
+                              description: Cluster autoscaler source repo.
+
+                            chart_name:
+                              type: string
+                              description: Cluster autoscaler chart name.
+
+                            version:
+                              type: string
+                              description: Cluster autoscaler version to run.
+
+                            #values:
+                            #  type: object
+                            #  description: Cluster autoscaler values.
+                            #  default: {}
+
+                        #
+                        external_dns:
+                          type: object
+                          description: Configuration for the External DNS.
+                          properties:
+                            source_repo:
+                              type: string
+                              description: External DNS source repo.
+
+                            chart_name:
+                              type: string
+                              description: External DNS chart name.
+
+                            version:
+                              type: string
+                              description: External DNS version to run.
+
+                            #values:
+                            #  type: object
+                            #  description: External DNS values.
+                            #  default: {}
+
+                        #
+                        cert_manager:
+                          type: object
+                          description: Configuration for the Cert manager.
+                          properties:
+                            source_repo:
+                              type: string
+                              description: Cert manager source repo.
+
+                            chart_name:
+                              type: string
+                              description: Cert manager chart name.
+
+                            version:
+                              type: string
+                              description: Cert manager version to run.
+
+                            #values:
+                            #  type: object
+                            #  description: Cert manager values.
+                            #  default: {}
+
+                        #
+                        ingress_nginx:
+                          type: object
+                          description: Configuration for the Ingress nginx.
+                          properties:
+                            source_repo:
+                              type: string
+                              description: Ingress nginx source repo.
+
+                            chart_name:
+                              type: string
+                              description: Ingress nginx chart name.
+
+                            version:
+                              type: string
+                              description: Ingress nginx version to run.
+
+                            #values:
+                            #  type: object
+                            #  description: Ingress nginx values.
+                            #  default: {}
+
+                        #
+                        vouch:
+                          type: object
+                          description: Configuration for Vouch Proxy.
+                          properties:
+                            source_repo:
+                              type: string
+                              description: Vouch Proxy source repo.
+
+                            chart_name:
+                              type: string
+                              description: Vouch Proxy chart name.
+
+                            version:
+                              type: string
+                              description: Vouch Proxy version to run.
+
+                            #values:
+                            #  type: object
+                            #  description: Vouch Proxy values.
+                            #  default: {}
+
+                        #
+                        kubernetes_external_secrets:
+                          type: object
+                          description: Configuration for Kubernetes external secrets.
+                          properties:
+                            source_repo:
+                              type: string
+                              description: Kubernetes external secrets source repo.
+
+                            chart_name:
+                              type: string
+                              description: Kubernetes external secrets chart name.
+
+                            version:
+                              type: string
+                              description: Kubernetes external secrets version to run.
+
+                            #values:
+                            #  type: object
+                            #  description: Kubernetes external secrets values.
+                            #  default: {}
+
+                        #
+                        prometheus:
+                          type: object
+                          description: Configuration for the Prometheus operator.
+                          properties:
+                            source_repo:
+                              type: string
+                              description: Prometheus source repo.
+
+                            chart_name:
+                              type: string
+                              description: Prometheus chart name.
+
+                            version:
+                              type: string
+                              description: Prometheus operator version to run.
+
+                            #values:
+                            #  type: object
+                            #  description: Prometheus values.
+                            #  default: {}
+
+                        #
+                        velero:
+                          type: object
+                          description: Configuration for Velero.
+                          properties:
+                            source_repo:
+                              type: string
+                              description: Velero source repo.
+
+                            chart_name:
+                              type: string
+                              description: Velero chart name.
+
+                            version:
+                              type: string
+                              description: Velero version to run.
+
+                            #values:
+                            #  type: object
+                            #  description: Velero values.
+                            #  default: {}
+
+                  required:
+                    - region
+                    - eks
+
+              required:
+                - id
+                - namespace
+                - parameters

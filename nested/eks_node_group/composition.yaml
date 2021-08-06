@@ -1,0 +1,151 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: compositenodegroup.aws.platformref.crossplane.io
+  labels:
+    provider: aws
+spec:
+  #writeConnectionSecretsToNamespace: upbound-system # TODO: Do we need this?
+  compositeTypeRef:
+    apiVersion: aws.platformref.crossplane.io/v1alpha1
+    kind: CompositeNodeGroup
+
+  patchSets:
+    - name: providerConfig
+      patches:
+        - fromFieldPath: spec.id
+          toFieldPath: spec.providerConfigRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-aws-provider-config"
+
+  resources:
+
+    - base:
+        apiVersion: eks.aws.crossplane.io/v1alpha1
+        kind: NodeGroup
+        spec:
+          forProvider:
+            clusterNameSelector:
+              matchControllerRef: true
+            nodeRoleSelector:
+              matchControllerRef: true
+              matchLabels:
+                role: nodegroup
+            subnetSelector:
+              matchLabels:
+                access: public
+
+      patches:
+        - fromFieldPath: metadata.annotations[crossplane.io/external-name]
+          toFieldPath: metadata.annotations[crossplane.io/external-name]
+
+        - fromFieldPath: "spec.networkRef.id"
+          toFieldPath: spec.forProvider.subnetSelector.matchLabels[networks.aws.platformref.crossplane.io/network-id]
+
+        - fromFieldPath: "spec.parameters.labels"
+          toFieldPath: spec.forProvider.labels
+
+        - fromFieldPath: "spec.parameters.region"
+          toFieldPath: spec.forProvider.region
+
+        - fromFieldPath: "spec.parameters.nodes.scalingConfig.minSize"
+          toFieldPath: "spec.forProvider.scalingConfig.minSize"
+
+        - fromFieldPath: "spec.parameters.nodes.scalingConfig.maxSize"
+          toFieldPath: "spec.forProvider.scalingConfig.maxSize"
+
+        - fromFieldPath: "spec.parameters.nodes.scalingConfig.desiredSize"
+          toFieldPath: "spec.forProvider.scalingConfig.desiredSize"
+
+        # The instanceTypes field in the provider is string[] but here we specify only one field
+        - fromFieldPath: "spec.parameters.nodes.instanceType"
+          toFieldPath: "spec.forProvider.instanceTypes[0]"
+          #transforms:
+          #  - type: map
+          #    map:
+          #      small: t3.small
+          #      medium: t3.medium
+          #      large: t3.large
+
+        - fromFieldPath: "spec.parameters.nodes.diskSize"
+          toFieldPath: "spec.forProvider.diskSize"
+
+        - type: PatchSet
+          patchSetName: providerConfig
+
+    - base:
+        apiVersion: identity.aws.crossplane.io/v1beta1
+        kind: IAMRole
+        metadata:
+          labels:
+            role: nodegroup
+        spec:
+          forProvider:
+            assumeRolePolicyDocument: |
+              {
+                "Version": "2012-10-17",
+                "Statement": [
+                    {
+                        "Effect": "Allow",
+                        "Principal": {
+                            "Service": [
+                                "ec2.amazonaws.com"
+                            ]
+                        },
+                        "Action": [
+                            "sts:AssumeRole"
+                        ]
+                    }
+                ]
+              }
+
+      patches:
+        - type: PatchSet
+          patchSetName: providerConfig
+
+    - base:
+        apiVersion: identity.aws.crossplane.io/v1beta1
+        kind: IAMRolePolicyAttachment
+        spec:
+          forProvider:
+            policyArn: arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy
+            roleNameSelector:
+              matchControllerRef: true
+              matchLabels:
+                role: nodegroup
+
+      patches:
+        - type: PatchSet
+          patchSetName: providerConfig
+
+    - base:
+        apiVersion: identity.aws.crossplane.io/v1beta1
+        kind: IAMRolePolicyAttachment
+        spec:
+          forProvider:
+            policyArn: arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy
+            roleNameSelector:
+              matchControllerRef: true
+              matchLabels:
+                role: nodegroup
+
+      patches:
+        - type: PatchSet
+          patchSetName: providerConfig
+
+    - base:
+        apiVersion: identity.aws.crossplane.io/v1beta1
+        kind: IAMRolePolicyAttachment
+        spec:
+          forProvider:
+            policyArn: arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
+            roleNameSelector:
+              matchControllerRef: true
+              matchLabels:
+                role: nodegroup
+
+      patches:
+        - type: PatchSet
+          patchSetName: providerConfig
