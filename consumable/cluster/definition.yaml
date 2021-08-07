@@ -103,7 +103,7 @@ spec:
                               minimum: 5
                               maximum: 200
                           required:
-                            - labels
+                            #- labels
                             - scalingConfig
 
                         ng2:
@@ -149,7 +149,7 @@ spec:
                               minimum: 5
                               maximum: 200
                           required:
-                            - labels
+                            #- labels
                             - scalingConfig
 
                       required:
