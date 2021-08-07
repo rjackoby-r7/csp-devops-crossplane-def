@@ -4,14 +4,14 @@ metadata:
   name: cwpcompositeclusters.aws.platformref.crossplane.io
 spec:
   claimNames:
-    kind: CwpCluster
-    plural: cwpclusters
+    kind: Cwp2NGCluster
+    plural: cwp2ngclusters
   connectionSecretKeys:
     - kubeconfig
   group: aws.platformref.crossplane.io
   names:
-    kind: CwpCompositeCluster
-    plural: cwpcompositeclusters
+    kind: CwpCompositeCluster2NG
+    plural: cwpcompositeclusters2ng
   versions:
     - name: v1alpha1
       served: true
