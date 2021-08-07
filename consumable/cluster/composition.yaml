@@ -6,7 +6,7 @@ spec:
   #writeConnectionSecretsToNamespace: upbound-system
   compositeTypeRef:
     apiVersion: aws.platformref.crossplane.io/v1alpha1
-    kind: CwpCompositeCluster3NG
+    kind: CwpCompositeCluster2NG
 
   resources:
 
