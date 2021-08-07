@@ -46,7 +46,6 @@ spec:
                       description: ID of the Network object this ref points to.
                   required:
                     - id
-                    - providerConfigName
 
                 ###
                 parameters:
@@ -71,5 +70,6 @@ spec:
               required:
                 - namespace
                 - id
+                - providerConfigName
                 - networkRef
                 - parameters

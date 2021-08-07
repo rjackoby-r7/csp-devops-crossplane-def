@@ -46,7 +46,6 @@ spec:
                       description: ID of the Cluster object this ref points to.
                   required:
                     - id
-                    - providerConfigName
 
                 ###
                 parameters:
@@ -65,5 +64,6 @@ spec:
               required:
                 - namespace
                 - id
+                - providerConfigName
                 - clusterRef
                 - parameters
