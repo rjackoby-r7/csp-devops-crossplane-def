@@ -57,7 +57,7 @@ spec:
                     region:
                       type: string
                       description: VPC region
-                      enum: ["us-east-1","us-east-2","eu-west-1"]
+                      enum: ["us-east-1","us-east-2","eu-west-1", "us-west-2"]
 
                   required:
                     - region

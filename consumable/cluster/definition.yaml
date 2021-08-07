@@ -44,7 +44,7 @@ spec:
                     region:
                       type: string
                       description: The cluster region.
-                      enum: ["us-east-1","us-east-2","eu-west-1"]
+                      enum: ["us-east-1","us-east-2","eu-west-1", "us-west-2"]
 
                     #Will take id, namespace, region from parent object alongside other fields will be internally patched
                     # network:
