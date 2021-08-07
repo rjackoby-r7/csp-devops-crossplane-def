@@ -1,7 +1,7 @@
 apiVersion: apiextensions.crossplane.io/v1
 kind: CompositeResourceDefinition
 metadata:
-  name: cwpcompositeclusters2ng.aws.platformref.crossplane.io
+  name: cwpcomposite2ngclusters.aws.platformref.crossplane.io
 spec:
   claimNames:
     kind: Cwp2NGCluster
@@ -10,8 +10,8 @@ spec:
     - kubeconfig
   group: aws.platformref.crossplane.io
   names:
-    kind: CwpCompositeCluster2NG
-    plural: cwpcompositeclusters2ng
+    kind: CwpComposite2NGCluster
+    plural: cwpcomposite2NGclusters
   versions:
     - name: v1alpha1
       served: true

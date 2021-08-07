@@ -1,12 +1,12 @@
 apiVersion: apiextensions.crossplane.io/v1
 kind: Composition
 metadata:
-  name: cwpcompositeclusters2ng.aws.platformref.crossplane.io
+  name: cwpcomposite2ngclusters.aws.platformref.crossplane.io
 spec:
   #writeConnectionSecretsToNamespace: upbound-system
   compositeTypeRef:
     apiVersion: aws.platformref.crossplane.io/v1alpha1
-    kind: CwpCompositeCluster2NG
+    kind: CwpComposite2NGCluster
 
   resources:
 
